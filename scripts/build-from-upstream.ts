@@ -17,15 +17,22 @@ import { dirname, join } from "node:path";
 // ---------------------------------------------------------------------------
 
 const ROOT = new URL("..", import.meta.url).pathname;
-const CACHE_DIR = join(ROOT, "upstream-cache");
-const DOCS_DIR = join(ROOT, "src/content/docs");
+
+const TARGET_VERSION = process.env.OIDC_VERSION || "current";
+const IS_V8 = TARGET_VERSION === "v8";
+const UPSTREAM_REF = IS_V8 ? "v8.x" : "main";
+const VERSION_PREFIX = IS_V8 ? "v8/" : "";
+const DATA_PREFIX = IS_V8 ? "v8-" : "";
+
+const CACHE_DIR = join(ROOT, IS_V8 ? "upstream-cache/v8" : "upstream-cache");
+const DOCS_DIR = join(ROOT, IS_V8 ? "src/content/docs/v8" : "src/content/docs");
 const DATA_DIR = join(ROOT, "src/data");
 
 const REFRESH =
   process.env.UPSTREAM_REFRESH === "1" || process.argv.includes("--refresh");
 
 const UPSTREAM_BASE =
-  "https://raw.githubusercontent.com/panva/node-oidc-provider/main";
+  `https://raw.githubusercontent.com/panva/node-oidc-provider/${UPSTREAM_REF}`;
 
 const SOURCES = {
   docsReadme: { url: `${UPSTREAM_BASE}/docs/README.md`, cache: "docs-readme.md" },
@@ -510,7 +517,7 @@ function generatePage(
 // ---------------------------------------------------------------------------
 
 async function main() {
-  console.log("build-from-upstream: starting...");
+  console.log(`build-from-upstream: starting... (version: ${TARGET_VERSION}, ref: ${UPSTREAM_REF})`);
   console.log(`  refresh: ${REFRESH}`);
 
   // 1. Fetch/cache upstream files
@@ -565,75 +572,78 @@ async function main() {
     }
   }
 
+  // Version-aware path prefix (e.g. "/v8/getting-started/..." or "/getting-started/...")
+  const P = VERSION_PREFIX ? `/${VERSION_PREFIX}` : "/";
+
   // Assign sections to pages
-  assignSection("Basic configuration example", "/getting-started/quick-start/");
-  assignSection("Accounts", "/getting-started/accounts/");
+  assignSection("Basic configuration example", `${P}getting-started/quick-start/`);
+  assignSection("Accounts", `${P}getting-started/accounts/`);
   const findAccountSec = findSection(configOptions, "findAccount");
   if (findAccountSec) {
-    pageAssignments.set(findAccountSec.slug, "/getting-started/accounts/#findaccount");
-    assignChildren(findAccountSec, "/getting-started/accounts/");
+    pageAssignments.set(findAccountSec.slug, `${P}getting-started/accounts/#findaccount`);
+    assignChildren(findAccountSec, `${P}getting-started/accounts/`);
   }
-  assignSection("Mounting oidc-provider", "/getting-started/mounting/");
-  assignSection("User flows", "/guides/user-flows/");
-  assignSection("Custom Grant Types", "/guides/custom-grant-types/");
-  assignSection("General access to `ctx`", "/guides/context-access/");
+  assignSection("Mounting oidc-provider", `${P}getting-started/mounting/`);
+  assignSection("User flows", `${P}guides/user-flows/`);
+  assignSection("Custom Grant Types", `${P}guides/custom-grant-types/`);
+  assignSection("General access to `ctx`", `${P}guides/context-access/`);
   assignSection(
     "Registering module middlewares (helmet, ip-filters, rate-limiters, etc)",
-    "/guides/middleware/",
+    `${P}guides/middleware/`,
   );
-  assignSection("Pre- and post-middlewares", "/guides/middleware/");
-  assignSection("Trusting TLS offloading proxies", "/guides/proxy/");
+  assignSection("Pre- and post-middlewares", `${P}guides/middleware/`);
+  assignSection("Trusting TLS offloading proxies", `${P}guides/proxy/`);
 
   // Config pages
-  assignSection("adapter", "/configuration/adapter/");
-  assignSection("claims", "/configuration/claims/");
+  assignSection("adapter", `${P}configuration/adapter/`);
+  assignSection("claims", `${P}configuration/claims/`);
 
   for (const t of ["clients", "clientBasedCORS", "clientDefaults", "clientAuthMethods"]) {
-    assignSection(t, "/configuration/clients/");
+    assignSection(t, `${P}configuration/clients/`);
   }
   // extraClientMetadata sections
   for (const s of configOptions) {
     if (s.title.startsWith("extraClientMetadata")) {
-      pageAssignments.set(s.slug, "/configuration/clients/");
-      assignChildren(s, "/configuration/clients/");
+      pageAssignments.set(s.slug, `${P}configuration/clients/`);
+      assignChildren(s, `${P}configuration/clients/`);
     }
   }
 
-  assignSection("features", "/configuration/features/");
+  assignSection("features", `${P}configuration/features/`);
   // features.* sub-options → individual sub-pages
   for (const s of configOptions) {
     if (s.title.startsWith("features.")) {
       const filename = featureSlugToFilename(s.title);
-      const pagePath = `/configuration/features/${filename}/`;
+      const pagePath = `${P}configuration/features/${filename}/`;
       pageAssignments.set(s.slug, pagePath);
       assignChildren(s, pagePath);
     }
   }
 
   for (const t of ["interactions"]) {
-    assignSection(t, "/configuration/interactions/");
+    assignSection(t, `${P}configuration/interactions/`);
   }
   // interactions.* sub-options
   for (const s of configOptions) {
     if (s.title.startsWith("interactions.") || s.title === "interactions") {
-      pageAssignments.set(s.slug, "/configuration/interactions/");
-      assignChildren(s, "/configuration/interactions/");
+      pageAssignments.set(s.slug, `${P}configuration/interactions/`);
+      assignChildren(s, `${P}configuration/interactions/`);
     }
   }
 
-  assignSection("jwks", "/configuration/jwks/");
+  assignSection("jwks", `${P}configuration/jwks/`);
   for (const s of configOptions) {
     if (s.title.startsWith("enabledJWA")) {
-      pageAssignments.set(s.slug, "/configuration/jwks/");
-      assignChildren(s, "/configuration/jwks/");
+      pageAssignments.set(s.slug, `${P}configuration/jwks/`);
+      assignChildren(s, `${P}configuration/jwks/`);
     }
   }
 
-  assignSection("pkce", "/configuration/pkce/");
+  assignSection("pkce", `${P}configuration/pkce/`);
   for (const s of configOptions) {
     if (s.title.startsWith("pkce.") || s.title === "pkce") {
-      pageAssignments.set(s.slug, "/configuration/pkce/");
-      assignChildren(s, "/configuration/pkce/");
+      pageAssignments.set(s.slug, `${P}configuration/pkce/`);
+      assignChildren(s, `${P}configuration/pkce/`);
     }
   }
 
@@ -646,32 +656,32 @@ async function main() {
     "extraTokenClaims",
   ];
   for (const t of tokenOptions) {
-    assignSection(t, "/configuration/tokens/");
+    assignSection(t, `${P}configuration/tokens/`);
   }
   // formats.* options
   for (const s of configOptions) {
     if (s.title.startsWith("formats")) {
-      pageAssignments.set(s.slug, "/configuration/tokens/");
-      assignChildren(s, "/configuration/tokens/");
+      pageAssignments.set(s.slug, `${P}configuration/tokens/`);
+      assignChildren(s, `${P}configuration/tokens/`);
     }
   }
 
-  assignSection("cookies", "/configuration/cookies/");
+  assignSection("cookies", `${P}configuration/cookies/`);
   for (const s of configOptions) {
     if (s.title.startsWith("cookies.")) {
-      pageAssignments.set(s.slug, "/configuration/cookies/");
-      assignChildren(s, "/configuration/cookies/");
+      pageAssignments.set(s.slug, `${P}configuration/cookies/`);
+      assignChildren(s, `${P}configuration/cookies/`);
     }
   }
 
   // FAQ
-  assignSection("FAQ", "/faq/");
+  assignSection("FAQ", `${P}faq/`);
   // Also try with emoji
   const faqSection =
     findSection(allSections, "FAQ") ??
     allSections.find((s) => s.title.startsWith("FAQ"));
   if (faqSection) {
-    pageAssignments.set(faqSection.slug, "/faq/");
+    pageAssignments.set(faqSection.slug, `${P}faq/`);
   }
 
   // Track which config options are already assigned
@@ -687,8 +697,8 @@ async function main() {
     (s) => !assignedConfigSlugs.has(s.slug),
   );
   for (const s of miscOptions) {
-    pageAssignments.set(s.slug, "/configuration/misc/");
-    assignChildren(s, "/configuration/misc/");
+    pageAssignments.set(s.slug, `${P}configuration/misc/`);
+    assignChildren(s, `${P}configuration/misc/`);
   }
 
   const linkMap = new Map<string, string>();
@@ -696,22 +706,29 @@ async function main() {
     linkMap.set(slug, page);
   }
 
-  // 4. Clean generated directories (leave index.md alone)
+  // 4. Clean generated directories (leave index.md/index.mdx alone for current version)
   console.log("\nCleaning generated directories...");
-  for (const dir of [
-    "getting-started",
-    "guides",
-    "configuration",
-    "events",
-  ]) {
-    const dirPath = join(DOCS_DIR, dir);
-    if (existsSync(dirPath)) {
-      rmSync(dirPath, { recursive: true });
+  if (IS_V8) {
+    // For v8, clean the entire v8 docs dir
+    if (existsSync(DOCS_DIR)) {
+      rmSync(DOCS_DIR, { recursive: true });
     }
+  } else {
+    for (const dir of [
+      "getting-started",
+      "guides",
+      "configuration",
+      "events",
+    ]) {
+      const dirPath = join(DOCS_DIR, dir);
+      if (existsSync(dirPath)) {
+        rmSync(dirPath, { recursive: true });
+      }
+    }
+    // Remove faq.md if exists
+    const faqPath = join(DOCS_DIR, "faq.md");
+    if (existsSync(faqPath)) rmSync(faqPath);
   }
-  // Remove faq.md if exists
-  const faqPath = join(DOCS_DIR, "faq.md");
-  if (existsSync(faqPath)) rmSync(faqPath);
 
   // 5. Generate pages
   console.log("\nGenerating pages:");
@@ -846,7 +863,7 @@ async function main() {
 
     // Build sidebar entries for the generated features-sidebar.json
     const sidebarEntries: { label: string; slug: string }[] = [
-      { label: "Features Overview", slug: "configuration/features" },
+      { label: "Features Overview", slug: `${VERSION_PREFIX}configuration/features` },
     ];
 
     // Build link list for overview page
@@ -857,9 +874,9 @@ async function main() {
       const label = s.title.replace("features.", "");
       sidebarEntries.push({
         label,
-        slug: `configuration/features/${filename}`,
+        slug: `${VERSION_PREFIX}configuration/features/${filename}`,
       });
-      linkListItems.push(`- [**${s.title}**](/configuration/features/${filename}/)`);
+      linkListItems.push(`- [**${s.title}**](${P}configuration/features/${filename}/)`);
 
       // Generate individual sub-feature page
       const body = renderSectionBody(s, 2);
@@ -884,7 +901,7 @@ async function main() {
 
     // Write sidebar JSON
     writeData(
-      "features-sidebar.json",
+      `${DATA_PREFIX}features-sidebar.json`,
       JSON.stringify(sidebarEntries, null, 2),
     );
     console.log(`  Generated ${featureSubSections.length} feature sub-pages + overview`);
@@ -1003,8 +1020,25 @@ async function main() {
   // --- Spec data ---
   console.log("\nExtracting spec data:");
   const specs = extractSpecs(readmeRaw);
-  writeData("specs.json", JSON.stringify(specs, null, 2));
+  writeData(`${DATA_PREFIX}specs.json`, JSON.stringify(specs, null, 2));
   console.log(`  Extracted ${specs.length} spec entries`);
+
+  // --- Version index page (v8 only) ---
+  if (IS_V8) {
+    console.log("\nGenerating version index page:");
+    const indexPage = [
+      "---",
+      "title: oidc-provider v8.x",
+      'description: "Documentation for node-oidc-provider v8.x"',
+      "---",
+      "",
+      "This is the documentation for **oidc-provider v8.x**.",
+      "",
+      `[Get Started →](${P}getting-started/quick-start/)`,
+      "",
+    ].join("\n");
+    writeOutput("index.md", indexPage);
+  }
 
   console.log("\nbuild-from-upstream: done!");
 }

@@ -28,4 +28,7 @@ src/content/docs/events/
 src/content/docs/faq.md
 src/data/specs.json
 src/data/features-sidebar.json
+src/content/docs/v8/
+src/data/v8-specs.json
+src/data/v8-features-sidebar.json
 upstream-cache/
