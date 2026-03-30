@@ -21,6 +21,7 @@ pnpm-debug.log*
 .DS_Store
 
 # Generated documentation pages (rebuilt by scripts/build-from-upstream.ts)
+src/content/docs/api/
 src/content/docs/getting-started/
 src/content/docs/guides/
 src/content/docs/configuration/

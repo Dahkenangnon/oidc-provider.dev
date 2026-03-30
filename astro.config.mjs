@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightGitHubAlerts from 'starlight-github-alerts';
+import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc';
 import starlightVersions from 'starlight-versions';
 import featuresSidebar from './src/data/features-sidebar.json' with { type: 'json' };
 
@@ -36,6 +37,19 @@ export default defineConfig({
 			tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 3 },
 			plugins: [
 				starlightGitHubAlerts(),
+				starlightTypeDoc({
+					entryPoints: ['./src/typedoc-entry.ts'],
+					tsconfig: './tsconfig.typedoc.json',
+					output: 'api',
+					sidebar: {
+						label: 'API Reference',
+						collapsed: true,
+					},
+					typeDoc: {
+						excludePrivate: true,
+						excludeProtected: true,
+					},
+				}),
 				starlightVersions({
 					versions: [
 						{ slug: 'v8', label: 'v8.x' },
@@ -86,6 +100,7 @@ export default defineConfig({
 					label: 'FAQ',
 					slug: 'faq',
 				},
+				typeDocSidebarGroup,
 			],
 		}),
 	],

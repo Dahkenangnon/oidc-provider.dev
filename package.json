@@ -15,10 +15,16 @@
   },
   "dependencies": {
     "@astrojs/starlight": "^0.38.2",
+    "@types/keygrip": "^1.0.6",
+    "@types/koa": "^3.0.2",
+    "@types/oidc-provider": "^9.5.0",
     "astro": "^6.0.1",
     "sharp": "^0.34.2",
     "starlight-github-alerts": "^0.2.0",
-    "starlight-versions": "^0.8.1"
+    "starlight-typedoc": "^0.21.5",
+    "starlight-versions": "^0.8.1",
+    "typedoc": "^0.28.18",
+    "typedoc-plugin-markdown": "^4.11.0"
   },
   "devDependencies": {
     "tsx": "^4.19.0"
