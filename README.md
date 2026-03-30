@@ -1,49 +1,69 @@
-# Starlight Starter Kit: Basics
+# oidc-provider.dev
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+Community documentation site for [panva/node-oidc-provider](https://github.com/panva/node-oidc-provider) — an OpenID Certified™ OAuth 2.0 Authorization Server for Node.js.
 
-```
-npm create astro@latest -- --template starlight
-```
+**Live site:** [https://oidc-provider.dev](https://oidc-provider.dev)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## How it works
 
-## 🚀 Project Structure
-
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+The site is built with [Astro](https://astro.build) + [Starlight](https://starlight.astro.build). Documentation content is fetched from the upstream `node-oidc-provider` repository and transformed into navigable, categorized pages by a build script.
 
 ```
-.
-├── public/
+upstream (panva/node-oidc-provider docs)
+  → scripts/build-from-upstream.ts (fetch, parse, split, rewrite links)
+    → src/content/docs/**/*.md (generated Starlight pages)
+      → dist/ (static site)
+```
+
+### Content pipeline
+
+- **Upstream sync** — A GitHub Actions workflow checks for upstream doc changes every 6 hours and opens a PR with updated cache files
+- **Build** — `npm run build` fetches/caches upstream docs, parses them into sections, and generates ~50 Starlight pages
+- **Deploy** — On merge to `main`, GitHub Actions builds and deploys to GitHub Pages
+
+## Development
+
+```bash
+npm install
+
+# Generate pages from cached upstream docs + start dev server
+npm run dev
+
+# Force-refresh upstream docs
+npm run generate:refresh
+
+# Production build
+npm run build
+```
+
+## Project structure
+
+```
+├── public/              # Static assets (CNAME, favicon, robots.txt, llms.txt)
+├── scripts/
+│   └── build-from-upstream.ts   # Upstream doc fetcher/parser/generator
 ├── src/
-│   ├── assets/
 │   ├── content/
 │   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
+│   │       ├── index.mdx        # Home page (hand-written)
+│   │       ├── getting-started/  # Generated
+│   │       ├── guides/           # Generated
+│   │       ├── configuration/    # Generated (features split into sub-pages)
+│   │       ├── events/           # Generated
+│   │       └── faq.md            # Generated
+│   └── data/                     # Generated JSON (specs, sidebar config)
+├── upstream-cache/      # Cached upstream markdown files
+├── astro.config.mjs     # Astro + Starlight configuration
+└── .github/workflows/   # Deploy, preview, upstream sync
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+## Credits
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+- **[panva](https://github.com/panva)** — Author and maintainer of node-oidc-provider
+- **[Dahkenangnon](https://github.com/Dahkenangnon)** — Creator and maintainer of this documentation site
 
-Static assets, like favicons, can be placed in the `public/` directory.
+## License
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+- **Documentation content**: [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
+- **Code (site, scripts, components)**: [MIT](https://opensource.org/licenses/MIT)
+- **oidc-provider** itself is maintained by [@panva](https://github.com/panva) under the [MIT license](https://github.com/panva/node-oidc-provider/blob/main/LICENSE.md)
