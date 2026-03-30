@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oidc-provider.dev/sitemap-index.xml

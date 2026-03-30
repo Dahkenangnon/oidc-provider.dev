@@ -3,9 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "generate": "tsx scripts/build-from-upstream.ts",
+    "generate:refresh": "UPSTREAM_REFRESH=1 tsx scripts/build-from-upstream.ts",
+    "dev": "npm run generate && astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "npm run generate && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -13,5 +15,8 @@
     "@astrojs/starlight": "^0.38.2",
     "astro": "^6.0.1",
     "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0"
   }
 }

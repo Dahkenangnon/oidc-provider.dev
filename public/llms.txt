@@ -1,0 +1,15 @@
+# oidc-provider.dev
+> Community documentation for panva/node-oidc-provider
+
+This site documents oidc-provider, an OpenID Certified™ OAuth 2.0
+Authorization Server implementation for Node.js.
+
+## Sections
+- Getting Started: installation, quick start, framework mounting
+- Configuration: adapter, claims, clients, features, interactions, JWKS, tokens, cookies
+- Guides: user flows, custom grants, middleware, proxy setup
+- Events: complete event reference
+- FAQ
+
+## Source
+Content is derived from https://github.com/panva/node-oidc-provider

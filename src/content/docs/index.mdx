@@ -1,40 +1,122 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+title: oidc-provider
+description: Community documentation for panva/node-oidc-provider — an OpenID Certified™ OAuth 2.0 Authorization Server for Node.js.
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
+  tagline: "OpenID Certified™ OAuth 2.0 Authorization Server implementation for Node.js. Production-ready, spec-compliant, and extensively configurable."
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: Get Started
+      link: /getting-started/quick-start/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
+    - text: Configuration
+      link: /configuration/adapter/
+      icon: setting
+      variant: secondary
+    - text: GitHub
+      link: https://github.com/panva/node-oidc-provider
       icon: external
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
 
-## Next steps
+## Explore the Documentation
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
+<CardGrid>
+  <Card title="Getting Started" icon="rocket">
+    Set up your OIDC provider from scratch — configuration basics, account integration, and framework mounting.
+
+    [Quick Start →](/getting-started/quick-start/)
+  </Card>
+  <Card title="Configuration" icon="setting">
+    Deep-dive into adapters, claims, clients, features, interactions, tokens, cookies, JWKS, PKCE, and more.
+
+    [Configuration →](/configuration/adapter/)
+  </Card>
+  <Card title="Guides" icon="open-book">
+    Practical guides for user flows, custom grant types, middleware registration, proxy setup, and context access.
+
+    [Guides →](/guides/user-flows/)
+  </Card>
+  <Card title="Events" icon="list-format">
+    Complete reference of all events emitted by the provider for logging, monitoring, and custom integrations.
+
+    [Events →](/events/reference/)
+  </Card>
+</CardGrid>
+
+## Implemented Specifications
+
+<Tabs>
+  <TabItem label="Core Standards">
+    <CardGrid>
+      <LinkCard title="RFC 6749 — OAuth 2.0" href="https://www.rfc-editor.org/rfc/rfc6749" />
+      <LinkCard title="OpenID Connect Core 1.0" href="https://openid.net/specs/openid-connect-core-1_0.html" />
+      <LinkCard title="OpenID Connect Discovery 1.0" href="https://openid.net/specs/openid-connect-discovery-1_0.html" />
+      <LinkCard title="RFC 8414 — Authorization Server Metadata" href="https://www.rfc-editor.org/rfc/rfc8414" />
+    </CardGrid>
+  </TabItem>
+  <TabItem label="Security & Tokens">
+    <CardGrid>
+      <LinkCard title="RFC 7636 — PKCE" href="https://www.rfc-editor.org/rfc/rfc7636" />
+      <LinkCard title="RFC 9449 — DPoP" href="https://www.rfc-editor.org/rfc/rfc9449" />
+      <LinkCard title="RFC 8705 — Mutual TLS (mTLS)" href="https://www.rfc-editor.org/rfc/rfc8705" />
+      <LinkCard title="RFC 7009 — Token Revocation" href="https://www.rfc-editor.org/rfc/rfc7009" />
+      <LinkCard title="RFC 7662 — Token Introspection" href="https://www.rfc-editor.org/rfc/rfc7662" />
+      <LinkCard title="RFC 9701 — JWT Introspection Response" href="https://www.rfc-editor.org/rfc/rfc9701" />
+    </CardGrid>
+  </TabItem>
+  <TabItem label="Advanced Flows">
+    <CardGrid>
+      <LinkCard title="RFC 8628 — Device Authorization Grant" href="https://www.rfc-editor.org/rfc/rfc8628" />
+      <LinkCard title="CIBA — Client Initiated Backchannel Auth" href="https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html" />
+      <LinkCard title="RFC 9126 — Pushed Authorization Requests" href="https://www.rfc-editor.org/rfc/rfc9126" />
+      <LinkCard title="RFC 9101 — JWT-Secured Authorization Request" href="https://www.rfc-editor.org/rfc/rfc9101" />
+      <LinkCard title="RFC 8707 — Resource Indicators" href="https://www.rfc-editor.org/rfc/rfc8707" />
+      <LinkCard title="RFC 8252 — OAuth for Native Apps" href="https://www.rfc-editor.org/rfc/rfc8252" />
+    </CardGrid>
+  </TabItem>
+  <TabItem label="FAPI & Profiles">
+    <CardGrid>
+      <LinkCard title="FAPI 1.0 Security Profile (Advanced)" href="https://openid.net/specs/openid-financial-api-part-2-1_0.html" />
+      <LinkCard title="FAPI 2.0 Security Profile" href="https://openid.bitbucket.io/fapi/fapi-2_0-security-profile.html" />
+      <LinkCard title="FAPI 2.0 Message Signing" href="https://openid.bitbucket.io/fapi/fapi-2_0-message-signing.html" />
+      <LinkCard title="JARM — JWT Secured Authorization Response Mode" href="https://openid.net/specs/oauth-v2-jarm.html" />
+    </CardGrid>
+  </TabItem>
+  <TabItem label="Registration & Logout">
+    <CardGrid>
+      <LinkCard title="OpenID Connect Dynamic Client Registration 1.0" href="https://openid.net/specs/openid-connect-registration-1_0.html" />
+      <LinkCard title="RFC 7591 — Dynamic Client Registration" href="https://www.rfc-editor.org/rfc/rfc7591" />
+      <LinkCard title="RFC 7592 — Client Registration Management" href="https://www.rfc-editor.org/rfc/rfc7592" />
+      <LinkCard title="RP-Initiated Logout 1.0" href="https://openid.net/specs/openid-connect-rpinitiated-1_0.html" />
+      <LinkCard title="Back-Channel Logout 1.0" href="https://openid.net/specs/openid-connect-backchannel-1_0.html" />
+      <LinkCard title="RFC 9207 — Issuer Identifier in Authorization Response" href="https://www.rfc-editor.org/rfc/rfc9207" />
+    </CardGrid>
+  </TabItem>
+</Tabs>
+
+<Aside type="tip" title="Experimental Features">
+  Several draft specifications are available as experimental features. See the [features configuration](/configuration/features/) for details on enabling them.
+</Aside>
+
+## OpenID Certification
+
+<Card title="OpenID Certified™" icon="approve-check">
+  oidc-provider has been [certified by the OpenID Foundation](https://openid.net/certification/). It passes all conformance tests for the supported profiles, giving you confidence that the implementation is correct and spec-compliant.
+</Card>
+
+## Credits
+
+<CardGrid>
+  <Card title="panva" icon="github">
+    Author and maintainer of [node-oidc-provider](https://github.com/panva/node-oidc-provider). The library and all upstream documentation are his work.
+
+    [GitHub Profile →](https://github.com/panva)
+  </Card>
+  <Card title="Dahkenangnon" icon="github">
+    Creator and maintainer of this documentation site, providing a navigable community resource for the library.
+
+    [GitHub Profile →](https://github.com/Dahkenangnon) | [Doc Site Repo →](https://github.com/Dahkenangnon/oidc-provider.dev)
+  </Card>
 </CardGrid>

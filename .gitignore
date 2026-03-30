@@ -19,3 +19,13 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+# Generated documentation pages (rebuilt by scripts/build-from-upstream.ts)
+src/content/docs/getting-started/
+src/content/docs/guides/
+src/content/docs/configuration/
+src/content/docs/events/
+src/content/docs/faq.md
+src/data/specs.json
+src/data/features-sidebar.json
+upstream-cache/
