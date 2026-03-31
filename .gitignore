@@ -27,6 +27,10 @@ src/content/docs/guides/
 src/content/docs/configuration/
 src/content/docs/events/
 src/content/docs/faq.md
+src/content/docs/changelog.md
+src/content/docs/changelog/
+src/content/docs/security.md
+public/changelog-rss.xml
 src/data/specs.json
 src/data/features-sidebar.json
 src/content/docs/v8/

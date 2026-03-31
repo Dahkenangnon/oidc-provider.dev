@@ -1,0 +1,31 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro';
+
+const route = Astro.locals.starlightRoute;
+const title = route?.entry?.data?.title ?? 'oidc-provider';
+const description =
+	route?.entry?.data?.description ??
+	'Community documentation for node-oidc-provider — an OpenID Certified™ OAuth 2.0 Authorization Server for Node.js.';
+
+const jsonLd = JSON.stringify({
+	'@context': 'https://schema.org',
+	'@type': 'TechArticle',
+	headline: title,
+	description,
+	url: Astro.url.href,
+	publisher: {
+		'@type': 'Organization',
+		name: 'oidc-provider.dev',
+		url: 'https://oidc-provider.dev',
+	},
+	about: {
+		'@type': 'SoftwareApplication',
+		name: 'node-oidc-provider',
+		url: 'https://github.com/panva/node-oidc-provider',
+		applicationCategory: 'Security',
+	},
+});
+---
+
+<Default><slot /></Default>
+<script type="application/ld+json" set:html={jsonLd} />

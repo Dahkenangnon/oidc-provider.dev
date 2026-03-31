@@ -5,6 +5,7 @@ import starlightGitHubAlerts from 'starlight-github-alerts';
 import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc';
 import starlightVersions from 'starlight-versions';
 import featuresSidebar from './src/data/features-sidebar.json' with { type: 'json' };
+import { ogImageIntegration } from './src/integrations/og-images.ts';
 
 // https://astro.build/config
 export default defineConfig({
@@ -28,10 +29,23 @@ export default defineConfig({
 			editLink: {
 				baseUrl: 'https://github.com/Dahkenangnon/oidc-provider.dev/edit/main/',
 			},
+			components: {
+				Footer: './src/components/Footer.astro',
+				Head: './src/components/Head.astro',
+			},
 			head: [
 				{ tag: 'meta', attrs: { property: 'og:image', content: 'https://oidc-provider.dev/og-image.png' } },
 				{ tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
 				{ tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+				{
+					tag: 'script',
+					attrs: {
+						'data-goatcounter': 'https://oidc-provider.goatcounter.com/count',
+						async: true,
+						src: '//gc.zgo.at/count.js',
+					},
+				},
+				{ tag: 'link', attrs: { rel: 'alternate', type: 'application/rss+xml', title: 'oidc-provider Changelog', href: '/changelog-rss.xml' } },
 			],
 			customCss: ['./src/styles/custom.css'],
 			tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 3 },
@@ -100,8 +114,17 @@ export default defineConfig({
 					label: 'FAQ',
 					slug: 'faq',
 				},
+				{ label: 'Changelog', slug: 'changelog' },
+				{ label: 'Security', slug: 'security' },
 				typeDocSidebarGroup,
+				{
+					label: 'Community',
+					items: [
+						{ label: 'GitHub Discussions', link: 'https://github.com/panva/node-oidc-provider/discussions', attrs: { target: '_blank', rel: 'noopener' } },
+					],
+				},
 			],
 		}),
+		ogImageIntegration(),
 	],
 });

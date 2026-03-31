@@ -38,7 +38,11 @@ const SOURCES = {
   docsReadme: { url: `${UPSTREAM_BASE}/docs/README.md`, cache: "docs-readme.md" },
   events: { url: `${UPSTREAM_BASE}/docs/events.md`, cache: "events.md" },
   readme: { url: `${UPSTREAM_BASE}/README.md`, cache: "readme.md" },
+  changelog: { url: `${UPSTREAM_BASE}/CHANGELOG.md`, cache: "changelog.md" },
+  security: { url: `${UPSTREAM_BASE}/SECURITY.md`, cache: "security.md" },
 } as const;
+
+const CHANGELOG_ENTRIES_PER_PAGE = 30;
 
 // ---------------------------------------------------------------------------
 // Fetch / cache helpers
@@ -229,7 +233,7 @@ function frontmatter(title: string, extra: Record<string, string> = {}): string 
     ? `"${title.replace(/"/g, '\\"')}"`
     : title;
 
-  const lines = [`---`, `title: ${safeTitle}`];
+  const lines = [`---`, `title: ${safeTitle}`, `editUrl: false`];
   for (const [k, v] of Object.entries(extra)) {
     lines.push(`${k}: ${v}`);
   }
@@ -522,10 +526,12 @@ async function main() {
 
   // 1. Fetch/cache upstream files
   console.log("\nFetching upstream files:");
-  const [docsReadme, eventsRaw, readmeRaw] = await Promise.all([
+  const [docsReadme, eventsRaw, readmeRaw, changelogRaw, securityRaw] = await Promise.all([
     fetchOrCache(SOURCES.docsReadme.url, SOURCES.docsReadme.cache),
     fetchOrCache(SOURCES.events.url, SOURCES.events.cache),
     fetchOrCache(SOURCES.readme.url, SOURCES.readme.cache),
+    fetchOrCache(SOURCES.changelog.url, SOURCES.changelog.cache),
+    fetchOrCache(SOURCES.security.url, SOURCES.security.cache),
   ]);
 
   // 2. Parse docs/README.md
@@ -728,6 +734,14 @@ async function main() {
     // Remove faq.md if exists
     const faqPath = join(DOCS_DIR, "faq.md");
     if (existsSync(faqPath)) rmSync(faqPath);
+
+    // Remove changelog/security generated files
+    for (const file of ["changelog.md", "security.md"]) {
+      const filePath = join(DOCS_DIR, file);
+      if (existsSync(filePath)) rmSync(filePath);
+    }
+    const changelogDir = join(DOCS_DIR, "changelog");
+    if (existsSync(changelogDir)) rmSync(changelogDir, { recursive: true });
   }
 
   // 5. Generate pages
@@ -1023,24 +1037,164 @@ async function main() {
   writeData(`${DATA_PREFIX}specs.json`, JSON.stringify(specs, null, 2));
   console.log(`  Extracted ${specs.length} spec entries`);
 
+  // --- CHANGELOG (paginated) ---
+  if (!IS_V8) {
+    console.log("\nGenerating changelog pages:");
+    const changelogEntries = splitChangelogEntries(changelogRaw);
+    console.log(`  Found ${changelogEntries.length} changelog entries`);
+
+    const totalPages = Math.ceil(changelogEntries.length / CHANGELOG_ENTRIES_PER_PAGE);
+
+    for (let page = 0; page < totalPages; page++) {
+      const start = page * CHANGELOG_ENTRIES_PER_PAGE;
+      const end = start + CHANGELOG_ENTRIES_PER_PAGE;
+      const entries = changelogEntries.slice(start, end);
+      const pageNum = page + 1;
+
+      let body = entries.join("\n\n");
+
+      // Add pagination links
+      const navLinks: string[] = [];
+      if (pageNum > 1) {
+        const prevLink = pageNum === 2 ? "/changelog/" : `/changelog/page-${pageNum - 1}/`;
+        navLinks.push(`[← Newer entries](${prevLink})`);
+      }
+      if (pageNum < totalPages) {
+        navLinks.push(`[Older entries →](/changelog/page-${pageNum + 1}/)`);
+      }
+      if (navLinks.length > 0) {
+        body += "\n\n---\n\n" + navLinks.join(" | ");
+      }
+
+      const title = pageNum === 1 ? "Changelog" : `Changelog (Page ${pageNum})`;
+      const pageContent = frontmatter(title) + body.trim() + "\n";
+
+      if (pageNum === 1) {
+        writeOutput("changelog.md", pageContent);
+      } else {
+        writeOutput(`changelog/page-${pageNum}.md`, pageContent);
+      }
+    }
+
+    // --- RSS feed ---
+    console.log("\nGenerating changelog RSS feed:");
+    const rssEntries = changelogEntries.slice(0, 20);
+    generateChangelogRss(rssEntries);
+  }
+
+  // --- SECURITY ---
+  if (!IS_V8) {
+    console.log("\nGenerating security page:");
+    const securityBody = securityRaw.replace(/^#\s+.+\n/, "").trim();
+    const page = frontmatter("Security Policy") + securityBody + "\n";
+    writeOutput("security.md", page);
+  }
+
+  // --- Spec coverage check ---
+  if (!IS_V8) {
+    console.log("\nSpec coverage check:");
+    checkSpecCoverage(specs, readmeRaw);
+  }
+
   // --- Version index page (v8 only) ---
   if (IS_V8) {
     console.log("\nGenerating version index page:");
-    const indexPage = [
-      "---",
-      "title: oidc-provider v8.x",
-      'description: "Documentation for node-oidc-provider v8.x"',
-      "---",
-      "",
-      "This is the documentation for **oidc-provider v8.x**.",
-      "",
-      `[Get Started →](${P}getting-started/quick-start/)`,
-      "",
-    ].join("\n");
+    const indexPage =
+      frontmatter("oidc-provider v8.x", {
+        description: '"Documentation for node-oidc-provider v8.x"',
+      }) +
+      `This is the documentation for **oidc-provider v8.x**.\n\n` +
+      `[Get Started →](${P}getting-started/quick-start/)\n`;
     writeOutput("index.md", indexPage);
   }
 
   console.log("\nbuild-from-upstream: done!");
+}
+
+// ---------------------------------------------------------------------------
+// Changelog helpers
+// ---------------------------------------------------------------------------
+
+function splitChangelogEntries(raw: string): string[] {
+  // Strip the top-level heading (# Changelog or similar)
+  const content = raw.replace(/^#\s+.+\n/, "");
+  // Split by ## headings (version entries)
+  const parts = content.split(/(?=^## )/m).filter((p) => p.trim());
+  return parts;
+}
+
+function generateChangelogRss(entries: string[]): void {
+  const items = entries.map((entry) => {
+    const titleMatch = entry.match(/^##\s+(.+)$/m);
+    const title = titleMatch ? titleMatch[1].trim() : "Release";
+    // Extract first paragraph as description
+    const bodyLines = entry.replace(/^##\s+.+\n/, "").trim().split("\n");
+    const description = bodyLines.slice(0, 5).join("\n").trim();
+
+    return `    <item>
+      <title>${escapeXml(title)}</title>
+      <link>https://oidc-provider.dev/changelog/</link>
+      <description>${escapeXml(description)}</description>
+    </item>`;
+  });
+
+  const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>oidc-provider Changelog</title>
+    <link>https://oidc-provider.dev/changelog/</link>
+    <description>Release notes for node-oidc-provider</description>
+    <language>en</language>
+${items.join("\n")}
+  </channel>
+</rss>
+`;
+
+  const rssPath = join(ROOT, "public", "changelog-rss.xml");
+  writeFileSync(rssPath, rss);
+  console.log("  [write] public/changelog-rss.xml");
+}
+
+function escapeXml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+// ---------------------------------------------------------------------------
+// Spec coverage check
+// ---------------------------------------------------------------------------
+
+function checkSpecCoverage(specs: SpecEntry[], readmeContent: string): void {
+  // Extract RFC identifiers from upstream README
+  const upstreamRfcs = new Set<string>();
+  const rfcPattern = /`(RFC\d+)`/g;
+  let match;
+  while ((match = rfcPattern.exec(readmeContent)) !== null) {
+    upstreamRfcs.add(match[1]);
+  }
+
+  // Extract RFCs from parsed specs
+  const coveredRfcs = new Set<string>();
+  function collectRfcs(entries: SpecEntry[]) {
+    for (const e of entries) {
+      if (e.rfc) coveredRfcs.add(e.rfc);
+      if (e.children) collectRfcs(e.children);
+    }
+  }
+  collectRfcs(specs);
+
+  const missing = [...upstreamRfcs].filter((r) => !coveredRfcs.has(r));
+  if (missing.length > 0) {
+    console.warn(
+      `  [warn] RFCs in upstream README not covered in specs.json: ${missing.join(", ")}`,
+    );
+  } else {
+    console.log("  All upstream RFCs are covered in specs.json");
+  }
 }
 
 function generateConfigPage(

@@ -4,12 +4,49 @@
 This site documents oidc-provider, an OpenID Certified™ OAuth 2.0
 Authorization Server implementation for Node.js.
 
-## Sections
-- Getting Started: installation, quick start, framework mounting
-- Configuration: adapter, claims, clients, features, interactions, JWKS, tokens, cookies
-- Guides: user flows, custom grants, middleware, proxy setup
-- Events: complete event reference
-- FAQ
+## Key Pages
+- Homepage: https://oidc-provider.dev/
+- Quick Start: https://oidc-provider.dev/getting-started/quick-start/
+- Accounts: https://oidc-provider.dev/getting-started/accounts/
+- Mounting: https://oidc-provider.dev/getting-started/mounting/
+
+## Guides
+- User Flows: https://oidc-provider.dev/guides/user-flows/
+- Custom Grant Types: https://oidc-provider.dev/guides/custom-grant-types/
+- Context Access: https://oidc-provider.dev/guides/context-access/
+- Middleware: https://oidc-provider.dev/guides/middleware/
+- Proxy: https://oidc-provider.dev/guides/proxy/
+
+## Configuration
+- Adapter: https://oidc-provider.dev/configuration/adapter/
+- Claims: https://oidc-provider.dev/configuration/claims/
+- Clients: https://oidc-provider.dev/configuration/clients/
+- Features Overview: https://oidc-provider.dev/configuration/features/
+- Interactions: https://oidc-provider.dev/configuration/interactions/
+- JWKS & JWA: https://oidc-provider.dev/configuration/jwks/
+- PKCE: https://oidc-provider.dev/configuration/pkce/
+- Tokens & TTL: https://oidc-provider.dev/configuration/tokens/
+- Cookies: https://oidc-provider.dev/configuration/cookies/
+- Other Options: https://oidc-provider.dev/configuration/misc/
+
+## Reference
+- Events: https://oidc-provider.dev/events/reference/
+- API Reference: https://oidc-provider.dev/api/
+- FAQ: https://oidc-provider.dev/faq/
+- Changelog: https://oidc-provider.dev/changelog/
+- Security Policy: https://oidc-provider.dev/security/
+
+## Specifications Implemented
+RFC 6749 (OAuth 2.0), OpenID Connect Core 1.0, OpenID Connect Discovery 1.0,
+RFC 8414 (Authorization Server Metadata), RFC 7636 (PKCE), RFC 9449 (DPoP),
+RFC 8705 (mTLS), RFC 7009 (Token Revocation), RFC 7662 (Token Introspection),
+RFC 9701 (JWT Introspection Response), RFC 8628 (Device Authorization Grant),
+CIBA, RFC 9126 (PAR), RFC 9101 (JAR), RFC 8707 (Resource Indicators),
+FAPI 1.0, FAPI 2.0, JARM, Dynamic Client Registration (RFC 7591/7592),
+RP-Initiated Logout, Back-Channel Logout, RFC 9207 (Issuer Identifier).
 
 ## Source
-Content is derived from https://github.com/panva/node-oidc-provider
+- Library: https://github.com/panva/node-oidc-provider
+- Documentation site: https://github.com/Dahkenangnon/oidc-provider.dev
+- RSS (Changelog): https://oidc-provider.dev/changelog-rss.xml
+- v8.x docs: https://oidc-provider.dev/v8/

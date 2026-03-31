@@ -19,6 +19,7 @@
     "@types/koa": "^3.0.2",
     "@types/oidc-provider": "^9.5.0",
     "astro": "^6.0.1",
+    "satori": "^0.26.0",
     "sharp": "^0.34.2",
     "starlight-github-alerts": "^0.2.0",
     "starlight-typedoc": "^0.21.5",
