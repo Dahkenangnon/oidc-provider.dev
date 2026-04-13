@@ -22,7 +22,7 @@ export default defineConfig({
 			social: [
 				{
 					icon: 'github',
-					label: 'GitHub',
+					label: 'Library on GitHub',
 					href: 'https://github.com/panva/node-oidc-provider',
 				},
 			],
@@ -121,6 +121,7 @@ export default defineConfig({
 					label: 'Community',
 					items: [
 						{ label: 'GitHub Discussions', link: 'https://github.com/panva/node-oidc-provider/discussions', attrs: { target: '_blank', rel: 'noopener' } },
+					{ label: 'Docs Site Source', link: 'https://github.com/Dahkenangnon/oidc-provider.dev', attrs: { target: '_blank', rel: 'noopener' } },
 					],
 				},
 			],
