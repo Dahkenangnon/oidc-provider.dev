@@ -6,7 +6,7 @@ import Default from '@astrojs/starlight/components/Footer.astro';
 
 <div class="license-footer">
 	<p>
-		Documentation by <a href="https://github.com/Dahkenangnon" target="_blank" rel="noopener">Dahkenangnon</a> · <a href="https://github.com/Dahkenangnon/oidc-provider.dev" target="_blank" rel="noopener">docs source</a> · Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC-BY-SA 4.0</a>.
+		Documentation by <a href="https://github.com/Dahkenangnon" target="_blank" rel="noopener">Dahkenangnon</a> · <a href="https://github.com/Dahkenangnon/oidc-provider.dev" target="_blank" rel="noopener">docs source</a> · Licensed under <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">MIT</a>.
 		<br />
 		<a href="https://github.com/panva/node-oidc-provider" target="_blank" rel="noopener">oidc-provider</a> by <a href="https://github.com/panva" target="_blank" rel="noopener">panva</a>, licensed under MIT.
 	</p>
@@ -14,18 +14,31 @@ import Default from '@astrojs/starlight/components/Footer.astro';
 
 <style>
 	.license-footer {
-		border-top: 1px solid var(--sl-color-gray-5);
-		padding-top: 1.5rem;
-		margin-top: 1.5rem;
+		border-top: 1px solid var(--sl-color-gray-6);
+		padding: 1.75rem 0 0.5rem;
+		margin-top: 2rem;
 		text-align: center;
 		font-size: var(--sl-text-xs);
+		line-height: 1.8;
 		color: var(--sl-color-gray-3);
+	}
+	.license-footer p {
+		margin: 0;
+	}
+	.license-footer br {
+		display: block;
+		content: '';
+		margin-top: 0.35rem;
 	}
 	.license-footer a {
 		color: var(--sl-color-gray-2);
-		text-decoration: underline;
+		text-decoration: none;
+		border-bottom: 1px solid var(--sl-color-gray-5);
+		padding-bottom: 1px;
+		transition: color 0.15s ease, border-color 0.15s ease;
 	}
 	.license-footer a:hover {
-		color: var(--sl-color-white);
+		color: var(--sl-color-accent-high);
+		border-bottom-color: var(--sl-color-accent);
 	}
 </style>

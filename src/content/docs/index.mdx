@@ -3,7 +3,7 @@ title: oidc-provider
 description: Community documentation for panva/node-oidc-provider — an OpenID Certified™ OAuth 2.0 Authorization Server for Node.js.
 template: splash
 hero:
-  tagline: "OpenID Certified™ OAuth 2.0 Authorization Server for Node.js by panva. Documentation maintained by Dahkenangnon."
+  tagline: "OpenID Certified™ OAuth 2.0 & OpenID Connect Authorization Server for Node.js. Implements 27 stable RFCs and OIDC specifications for enterprise-grade authentication and authorization."
   image:
     file: ../../assets/hero-illustration.svg
     alt: "Diagram showing OpenID Connect flow between Provider, Client, and User"
@@ -60,58 +60,46 @@ import { Card, CardGrid, LinkCard, Tabs, TabItem, Aside } from '@astrojs/starlig
 
 ## Implemented Specifications
 
-<Tabs>
-  <TabItem label="Core Standards">
-    <CardGrid>
-      <LinkCard title="RFC 6749 — OAuth 2.0" href="https://www.rfc-editor.org/rfc/rfc6749" />
-      <LinkCard title="OpenID Connect Core 1.0" href="https://openid.net/specs/openid-connect-core-1_0.html" />
-      <LinkCard title="OpenID Connect Discovery 1.0" href="https://openid.net/specs/openid-connect-discovery-1_0.html" />
-      <LinkCard title="RFC 8414 — Authorization Server Metadata" href="https://www.rfc-editor.org/rfc/rfc8414" />
-    </CardGrid>
-  </TabItem>
-  <TabItem label="Security & Tokens">
-    <CardGrid>
-      <LinkCard title="RFC 7636 — PKCE" href="https://www.rfc-editor.org/rfc/rfc7636" />
-      <LinkCard title="RFC 9449 — DPoP" href="https://www.rfc-editor.org/rfc/rfc9449" />
-      <LinkCard title="RFC 8705 — Mutual TLS (mTLS)" href="https://www.rfc-editor.org/rfc/rfc8705" />
-      <LinkCard title="RFC 7009 — Token Revocation" href="https://www.rfc-editor.org/rfc/rfc7009" />
-      <LinkCard title="RFC 7662 — Token Introspection" href="https://www.rfc-editor.org/rfc/rfc7662" />
-      <LinkCard title="RFC 9701 — JWT Introspection Response" href="https://www.rfc-editor.org/rfc/rfc9701" />
-    </CardGrid>
-  </TabItem>
-  <TabItem label="Advanced Flows">
-    <CardGrid>
-      <LinkCard title="RFC 8628 — Device Authorization Grant" href="https://www.rfc-editor.org/rfc/rfc8628" />
-      <LinkCard title="CIBA — Client Initiated Backchannel Auth" href="https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html" />
-      <LinkCard title="RFC 9126 — Pushed Authorization Requests" href="https://www.rfc-editor.org/rfc/rfc9126" />
-      <LinkCard title="RFC 9101 — JWT-Secured Authorization Request" href="https://www.rfc-editor.org/rfc/rfc9101" />
-      <LinkCard title="RFC 8707 — Resource Indicators" href="https://www.rfc-editor.org/rfc/rfc8707" />
-      <LinkCard title="RFC 8252 — OAuth for Native Apps" href="https://www.rfc-editor.org/rfc/rfc8252" />
-    </CardGrid>
-  </TabItem>
-  <TabItem label="FAPI & Profiles">
-    <CardGrid>
-      <LinkCard title="FAPI 1.0 Security Profile (Advanced)" href="https://openid.net/specs/openid-financial-api-part-2-1_0.html" />
-      <LinkCard title="FAPI 2.0 Security Profile" href="https://openid.bitbucket.io/fapi/fapi-2_0-security-profile.html" />
-      <LinkCard title="FAPI 2.0 Message Signing" href="https://openid.bitbucket.io/fapi/fapi-2_0-message-signing.html" />
-      <LinkCard title="JARM — JWT Secured Authorization Response Mode" href="https://openid.net/specs/oauth-v2-jarm.html" />
-    </CardGrid>
-  </TabItem>
-  <TabItem label="Registration & Logout">
-    <CardGrid>
-      <LinkCard title="OpenID Connect Dynamic Client Registration 1.0" href="https://openid.net/specs/openid-connect-registration-1_0.html" />
-      <LinkCard title="RFC 7591 — Dynamic Client Registration" href="https://www.rfc-editor.org/rfc/rfc7591" />
-      <LinkCard title="RFC 7592 — Client Registration Management" href="https://www.rfc-editor.org/rfc/rfc7592" />
-      <LinkCard title="RP-Initiated Logout 1.0" href="https://openid.net/specs/openid-connect-rpinitiated-1_0.html" />
-      <LinkCard title="Back-Channel Logout 1.0" href="https://openid.net/specs/openid-connect-backchannel-1_0.html" />
-      <LinkCard title="RFC 9207 — Issuer Identifier in Authorization Response" href="https://www.rfc-editor.org/rfc/rfc9207" />
-    </CardGrid>
-  </TabItem>
-</Tabs>
-
-<Aside type="tip" title="Experimental Features">
-  Several draft specifications are available as experimental features. See the [features configuration](/configuration/features/) for details on enabling them.
+<Aside type="note" title="Table Update Schedule">
+  This specifications table is **manually updated weekly** or whenever the upstream [node-oidc-provider README](https://github.com/panva/node-oidc-provider#implemented-specs--features) changes. Not all features are enabled by default—see [configuration](/configuration/features) to enable them.
 </Aside>
+
+| Specification | Description | Status | Reference |
+|---|---|---|---|
+| **RFC 6749** | OAuth 2.0 | Stable | [RFC 6749](https://www.rfc-editor.org/rfc/rfc6749.html) |
+| **OpenID Connect Core 1.0** | OpenID Connect | Stable | [OIDC Core](https://openid.net/specs/openid-connect-core-1_0-errata2.html) |
+| **OpenID Connect Discovery 1.0** | OIDC Discovery | Stable | [OIDC Discovery](https://openid.net/specs/openid-connect-discovery-1_0-errata2.html) |
+| **RFC 8414** | Authorization Server Metadata | Stable | [RFC 8414](https://www.rfc-editor.org/rfc/rfc8414.html) |
+| **OpenID Connect Dynamic Client Registration 1.0** | Dynamic Client Registration | Stable | [OIDC DCR](https://openid.net/specs/openid-connect-registration-1_0-errata2.html) |
+| **RFC 7591** | OAuth 2.0 Dynamic Client Registration Protocol | Stable | [RFC 7591](https://www.rfc-editor.org/rfc/rfc7591.html) |
+| **RFC 7592** | OAuth 2.0 Dynamic Client Registration Management | Stable | [RFC 7592](https://www.rfc-editor.org/rfc/rfc7592.html) |
+| **OpenID Connect RP-Initiated Logout 1.0** | RP-Initiated Logout | Stable | [RP-Init Logout](https://openid.net/specs/openid-connect-rpinitiated-1_0-final.html) |
+| **OpenID Connect Back-Channel Logout 1.0** | Back-Channel Logout | Stable | [Back-Channel Logout](https://openid.net/specs/openid-connect-backchannel-1_0-errata1.html) |
+| **RFC 7009** | OAuth 2.0 Token Revocation | Stable | [RFC 7009](https://www.rfc-editor.org/rfc/rfc7009.html) |
+| **RFC 7636** | Proof Key for Code Exchange (PKCE) | Stable | [RFC 7636](https://www.rfc-editor.org/rfc/rfc7636.html) |
+| **RFC 7662** | OAuth 2.0 Token Introspection | Stable | [RFC 7662](https://www.rfc-editor.org/rfc/rfc7662.html) |
+| **RFC 8252** | OAuth 2.0 for Native Apps BCP (AppAuth) | Stable | [RFC 8252](https://www.rfc-editor.org/rfc/rfc8252.html) |
+| **RFC 8628** | OAuth 2.0 Device Authorization Grant (Device Flow) | Stable | [RFC 8628](https://www.rfc-editor.org/rfc/rfc8628.html) |
+| **RFC 8705** | OAuth 2.0 Mutual TLS (mTLS) | Stable | [RFC 8705](https://www.rfc-editor.org/rfc/rfc8705.html) |
+| **RFC 8707** | OAuth 2.0 Resource Indicators | Stable | [RFC 8707](https://www.rfc-editor.org/rfc/rfc8707.html) |
+| **RFC 9101** | OAuth 2.0 JWT-Secured Authorization Request (JAR) | Stable | [RFC 9101](https://www.rfc-editor.org/rfc/rfc9101.html) |
+| **RFC 9126** | OAuth 2.0 Pushed Authorization Requests (PAR) | Stable | [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html) |
+| **RFC 9207** | OAuth 2.0 Authorization Server Issuer Identifier | Stable | [RFC 9207](https://www.rfc-editor.org/rfc/rfc9207.html) |
+| **RFC 9449** | OAuth 2.0 Demonstration of Proof-of-Possession (DPoP) | Stable | [RFC 9449](https://www.rfc-editor.org/rfc/rfc9449.html) |
+| **RFC 9701** | JWT Response for OAuth Token Introspection | Stable | [RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html) |
+| **FAPI 1.0 Security Profile** | FAPI 1.0 - Part 2: Advanced | Stable | [FAPI 1.0](https://openid.net/specs/openid-financial-api-part-2-1_0-final.html) |
+| **FAPI 2.0 Security Profile** | FAPI 2.0 | Stable | [FAPI 2.0](https://openid.net/specs/fapi-security-profile-2_0-final.html) |
+| **FAPI 2.0 Message Signing** | FAPI 2.0 Message Signing | Stable | [FAPI 2.0 MS](https://openid.net/specs/fapi-message-signing-2_0-final.html) |
+| **JWT Secured Authorization Response Mode (JARM)** | JARM | Stable | [JARM](https://openid.net/specs/oauth-v2-jarm-errata1.html) |
+| **OpenID Connect CIBA** | Client Initiated Backchannel Authentication | Stable | [CIBA](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-final.html) |
+| **OpenID Connect RP Metadata Choices 1.0** | RP Metadata Choices | Stable | [RP Metadata](https://openid.net/specs/openid-connect-rp-metadata-choices-1_0-final.html) |
+| **FAPI-CIBA** | FAPI-CIBA - Implementers Draft 01 | Experimental | [FAPI-CIBA](https://openid.net/specs/openid-financial-api-ciba-ID1.html) |
+| **OAuth 2.0 Attestation-Based Client Authentication** | Attestation-Based Client Authentication - Draft 06 | Experimental | [Attestation Auth](https://www.ietf.org/archive/id/draft-ietf-oauth-attestation-based-client-auth-06.html) |
+| **OAuth Client ID Metadata Document** | CIMD - Draft 01 | Experimental | [CIMD](https://www.ietf.org/archive/id/draft-ietf-oauth-client-id-metadata-document-01.html) |
+
+**Supported Access Token Formats:**
+- Opaque
+- [JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens](https://www.rfc-editor.org/rfc/rfc9068.html)
 
 ## OpenID Certification
 

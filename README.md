@@ -29,15 +29,13 @@ All credit for [node-oidc-provider][] goes to [@panva][]. This site simply reorg
 
 ## License
 
-| Scope | License |
-|---|---|
-| Documentation content | [CC-BY-SA 4.0][cc-by-sa] |
-| Site code | [MIT][mit] |
+This project is licensed under the [MIT License][mit].
+
+The upstream [node-oidc-provider][] project and its original documentation remain subject to their original licensing and attribution.
 
 [node-oidc-provider]: https://github.com/panva/node-oidc-provider
 [oidc-provider.dev]: https://oidc-provider.dev
 [@panva]: https://github.com/panva
 [Astro]: https://astro.build
 [Starlight]: https://starlight.astro.build
-[cc-by-sa]: https://creativecommons.org/licenses/by-sa/4.0/
 [mit]: https://opensource.org/licenses/MIT
