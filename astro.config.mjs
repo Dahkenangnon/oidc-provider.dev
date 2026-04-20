@@ -7,6 +7,17 @@ import starlightVersions from 'starlight-versions';
 import featuresSidebar from './src/data/features-sidebar.json' with { type: 'json' };
 import { ogImageIntegration } from './src/integrations/og-images.ts';
 
+// Fetch latest oidc-provider versions from npm at build time
+const npmMeta = await fetch('https://registry.npmjs.org/oidc-provider')
+	.then((r) => r.json())
+	.catch(() => null);
+const latestVersion = npmMeta?.['dist-tags']?.latest ?? 'latest';
+const v8Version = npmMeta
+	? Object.keys(npmMeta.versions ?? {})
+			.filter((v) => v.startsWith('8.'))
+			.pop() ?? 'v8.x'
+	: 'v8.x';
+
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://oidc-provider.dev',
@@ -65,8 +76,9 @@ export default defineConfig({
 					},
 				}),
 				starlightVersions({
+					current: { label: `v${latestVersion} (latest)` },
 					versions: [
-						{ slug: 'v8', label: 'v8.x' },
+						{ slug: 'v8', label: `v${v8Version}` },
 					],
 				}),
 			],
