@@ -17,7 +17,51 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.result.outputs.changed }}
+      cache-key: ${{ steps.shas.outputs.cache-key }}
+    steps:
+      - name: Get upstream branch SHAs
+        id: shas
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          MAIN_SHA=$(curl -sf \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/panva/node-oidc-provider/commits/main" \
+            | jq -r '.sha')
+          V8_SHA=$(curl -sf \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/panva/node-oidc-provider/commits/v8.x" \
+            | jq -r '.sha')
+          echo "cache-key=upstream-${MAIN_SHA}-${V8_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Lookup deployed cache
+        id: cache-check
+        uses: actions/cache/restore@v4
+        with:
+          path: .upstream-deployed
+          key: ${{ steps.shas.outputs.cache-key }}
+          lookup-only: true
+
+      - name: Set changed output
+        id: result
+        run: |
+          if [[ "${{ steps.cache-check.outputs.cache-hit }}" == "true" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Upstream unchanged — skipping deploy"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Upstream changed — proceeding with deploy"
+          fi
+
   build-and-deploy:
+    needs: check-upstream
+    if: github.event_name != 'schedule' || needs.check-upstream.outputs.changed == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -40,3 +84,12 @@ jobs:
 
       - id: deployment
         uses: actions/deploy-pages@v5
+
+      - name: Mark upstream SHAs as deployed
+        run: mkdir -p .upstream-deployed && echo "${{ needs.check-upstream.outputs.cache-key }}" > .upstream-deployed/marker
+
+      - name: Save upstream cache
+        uses: actions/cache/save@v4
+        with:
+          path: .upstream-deployed
+          key: ${{ needs.check-upstream.outputs.cache-key }}
