@@ -26,6 +26,45 @@ const jsonLd = JSON.stringify({
 	},
 });
 ---
+<h2 class="sr-only">Preview of the public stats documentation banner</h2>
+
+<div style="padding: 1rem 0 0.5rem;">
+  <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--color-text-secondary); margin: 0 0 14px 0;">Banner preview — oidc-provider.dev</p>
+
+  <div style="border-left: 3px solid var(--color-border-info); border-top: 0.5px solid var(--color-border-secondary); border-right: 0.5px solid var(--color-border-secondary); border-bottom: 0.5px solid var(--color-border-secondary); border-radius: 0; background: var(--color-background-info); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+
+    <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 200px;">
+      <span id="live-badge" style="display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em; color: var(--color-text-success); background: var(--color-background-success); border: 0.5px solid var(--color-border-success); border-radius: 9999px; padding: 3px 10px; white-space: nowrap; flex-shrink: 0;">
+        <span id="live-dot" style="width: 5px; height: 5px; border-radius: 50%; background: currentColor; display: inline-block;"></span>
+        LIVE
+      </span>
+
+      <div>
+        <p style="font-size: 13.5px; font-weight: 500; margin: 0 0 2px; color: var(--color-text-info); line-height: 1.35;">Documentation analytics are public</p>
+        <p style="font-size: 12px; margin: 0; color: var(--color-text-secondary); line-height: 1.4;">Page views · traffic sources · visitor trends — open to everyone</p>
+      </div>
+    </div>
+
+    <a href="https://stats.oidc-provider.dev/" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 500; color: var(--color-text-primary); text-decoration: none; padding: 6px 13px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); white-space: nowrap; flex-shrink: 0;">
+      <i class="ti ti-chart-bar" style="font-size: 15px;" aria-hidden="true"></i>
+      View stats
+      <i class="ti ti-external-link" style="font-size: 13px;" aria-hidden="true"></i>
+    </a>
+  </div>
+
+  <p style="font-size: 11px; color: var(--color-text-secondary); margin: 12px 0 0 3px;">Adapts to Starlight light/dark theme via <code style="font-size: 10.5px; font-family: var(--font-mono); background: var(--color-background-secondary); padding: 1px 4px; border-radius: 4px;">[data-theme]</code> selector. The <span style="color: var(--color-text-success); font-weight: 500;">● LIVE</span> dot pulses.</p>
+</div>
+
+<script>
+  var dot = document.getElementById('live-dot');
+  if (dot) {
+    var t = 0;
+    setInterval(function() {
+      t += 0.04;
+      dot.style.opacity = (0.35 + 0.65 * (0.5 + 0.5 * Math.cos(t * Math.PI)));
+    }, 40);
+  }
+</script>
 
 <Default><slot /></Default>
 <script type="application/ld+json" set:html={jsonLd} />
