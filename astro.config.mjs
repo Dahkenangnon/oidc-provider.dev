@@ -48,6 +48,16 @@ export default defineConfig({
 				{ tag: 'meta', attrs: { property: 'og:image', content: 'https://oidc-provider.dev/og-image.png' } },
 				{ tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
 				{ tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+				{ tag: 'script',
+			    content: `
+			      var t = setInterval(function() {
+			        if (window.goatcounter && window.goatcounter.visit_count) {
+			          clearInterval(t)
+			          window.goatcounter.visit_count({ append: 'body' })
+			        }
+			      }, 100)
+			    `,
+			  },
 				{
 					tag: 'script',
 					attrs: {
