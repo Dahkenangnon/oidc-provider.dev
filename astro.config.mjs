@@ -48,23 +48,58 @@ export default defineConfig({
 				{ tag: 'meta', attrs: { property: 'og:image', content: 'https://oidc-provider.dev/og-image.png' } },
 				{ tag: 'meta', attrs: { property: 'og:type', content: 'website' } },
 				{ tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
-				{ tag: 'script',
-			    content: `
-			      var t = setInterval(function() {
-			        if (window.goatcounter && window.goatcounter.visit_count) {
-			          clearInterval(t)
-			          window.goatcounter.visit_count({ append: 'body' })
-			        }
-			      }, 100)
-			    `,
-			  },
 				{
-					tag: 'script',
-					attrs: {
-						'data-goatcounter': 'https://oidc-provider.goatcounter.com/count',
-						async: true,
-						src: '//gc.zgo.at/count.js',
-					},
+				  tag: 'script',
+				  attrs: {
+				    'data-goatcounter': 'https://stats.oidc-provider.dev/count',
+				    async: true,
+				    src: 'https://gc.zgo.at/count.js',
+				  },
+				},
+				{ tag: 'script',
+				  content: `
+				    (function () {
+				      var attempts = 0;
+				      var done = false;
+				
+				      function renderPageViewCounter() {
+				        if (done) return true;
+				
+				        var target = document.querySelector('[data-gc-page-views]');
+				        if (!target || !window.goatcounter || !window.goatcounter.get_data) {
+				          return false;
+				        }
+				
+				        done = true;
+				
+				        var path = window.goatcounter.get_data().p;
+				
+				        fetch('https://stats.oidc-provider.dev/counter/' + encodeURIComponent(path) + '.json')
+				          .then(function (response) {
+				            if (!response.ok) throw new Error('Counter unavailable');
+				            return response.json();
+				          })
+				          .then(function (data) {
+				            var count = target.querySelector('[data-gc-page-views-count]');
+				            if (count) count.textContent = data.count || '0';
+				            target.hidden = false;
+				          })
+				          .catch(function () {
+				            target.hidden = true;
+				          });
+				
+				        return true;
+				      }
+				
+				      var timer = setInterval(function () {
+				        if (renderPageViewCounter() || ++attempts > 100) {
+				          clearInterval(timer);
+				        }
+				      }, 100);
+				
+				      document.addEventListener('DOMContentLoaded', renderPageViewCounter);
+				    })();
+				  `,
 				},
 				{ tag: 'link', attrs: { rel: 'alternate', type: 'application/rss+xml', title: 'oidc-provider Changelog', href: '/changelog-rss.xml' } },
 			],
