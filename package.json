@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "test": "node --import tsx --test tests/*.test.ts",
     "generate": "tsx scripts/build-from-upstream.ts",
     "generate:v8": "OIDC_VERSION=v8 tsx scripts/build-from-upstream.ts",
     "generate:all": "npm run generate && npm run generate:v8",

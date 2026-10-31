@@ -3,7 +3,7 @@ title: oidc-provider
 description: Community documentation for panva/node-oidc-provider — an OpenID Certified™ OAuth 2.0 Authorization Server for Node.js.
 template: splash
 hero:
-  tagline: "OpenID Certified™ OAuth 2.0 & OpenID Connect Authorization Server for Node.js. Implements 27 stable RFCs and OIDC specifications for enterprise-grade authentication and authorization."
+  tagline: "OpenID Certified™ OAuth 2.0 and OpenID Connect Authorization Server for Node.js."
   image:
     file: ../../assets/hero-illustration.svg
     alt: "Diagram showing OpenID Connect flow between Provider, Client, and User"
@@ -21,7 +21,11 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid, LinkCard, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+import Specifications from '../../components/Specifications.astro';
+import OidfedFeature from '../../components/OidfedFeature.astro';
+
+<OidfedFeature />
 
 ## Explore the Documentation
 
@@ -60,51 +64,20 @@ import { Card, CardGrid, LinkCard, Tabs, TabItem, Aside } from '@astrojs/starlig
 
 ## Implemented Specifications
 
-<Aside type="note" title="Table Update Schedule">
-  This specifications table is **manually updated weekly** or whenever the upstream [node-oidc-provider README](https://github.com/panva/node-oidc-provider#implemented-specs--features) changes. Not all features are enabled by default—see [configuration](/configuration/features) to enable them.
+<Aside type="note" title="Upstream Specification Coverage">
+  This table and the access-token formats are generated from the upstream [node-oidc-provider README](https://github.com/panva/node-oidc-provider#implemented-specs--features) during each site build. Coverage follows upstream `main`; older library versions may differ. Not all features are enabled by default—see [feature configuration](/configuration/features/) to enable them.
 </Aside>
 
-| Specification | Description | Status | Reference |
-|---|---|---|---|
-| **RFC 6749** | OAuth 2.0 | Stable | [RFC 6749](https://www.rfc-editor.org/rfc/rfc6749.html) |
-| **OpenID Connect Core 1.0** | OpenID Connect | Stable | [OIDC Core](https://openid.net/specs/openid-connect-core-1_0-errata2.html) |
-| **OpenID Connect Discovery 1.0** | OIDC Discovery | Stable | [OIDC Discovery](https://openid.net/specs/openid-connect-discovery-1_0-errata2.html) |
-| **RFC 8414** | Authorization Server Metadata | Stable | [RFC 8414](https://www.rfc-editor.org/rfc/rfc8414.html) |
-| **OpenID Connect Dynamic Client Registration 1.0** | Dynamic Client Registration | Stable | [OIDC DCR](https://openid.net/specs/openid-connect-registration-1_0-errata2.html) |
-| **RFC 7591** | OAuth 2.0 Dynamic Client Registration Protocol | Stable | [RFC 7591](https://www.rfc-editor.org/rfc/rfc7591.html) |
-| **RFC 7592** | OAuth 2.0 Dynamic Client Registration Management | Stable | [RFC 7592](https://www.rfc-editor.org/rfc/rfc7592.html) |
-| **OpenID Connect RP-Initiated Logout 1.0** | RP-Initiated Logout | Stable | [RP-Init Logout](https://openid.net/specs/openid-connect-rpinitiated-1_0-final.html) |
-| **OpenID Connect Back-Channel Logout 1.0** | Back-Channel Logout | Stable | [Back-Channel Logout](https://openid.net/specs/openid-connect-backchannel-1_0-errata1.html) |
-| **RFC 7009** | OAuth 2.0 Token Revocation | Stable | [RFC 7009](https://www.rfc-editor.org/rfc/rfc7009.html) |
-| **RFC 7636** | Proof Key for Code Exchange (PKCE) | Stable | [RFC 7636](https://www.rfc-editor.org/rfc/rfc7636.html) |
-| **RFC 7662** | OAuth 2.0 Token Introspection | Stable | [RFC 7662](https://www.rfc-editor.org/rfc/rfc7662.html) |
-| **RFC 8252** | OAuth 2.0 for Native Apps BCP (AppAuth) | Stable | [RFC 8252](https://www.rfc-editor.org/rfc/rfc8252.html) |
-| **RFC 8628** | OAuth 2.0 Device Authorization Grant (Device Flow) | Stable | [RFC 8628](https://www.rfc-editor.org/rfc/rfc8628.html) |
-| **RFC 8705** | OAuth 2.0 Mutual TLS (mTLS) | Stable | [RFC 8705](https://www.rfc-editor.org/rfc/rfc8705.html) |
-| **RFC 8707** | OAuth 2.0 Resource Indicators | Stable | [RFC 8707](https://www.rfc-editor.org/rfc/rfc8707.html) |
-| **RFC 9101** | OAuth 2.0 JWT-Secured Authorization Request (JAR) | Stable | [RFC 9101](https://www.rfc-editor.org/rfc/rfc9101.html) |
-| **RFC 9126** | OAuth 2.0 Pushed Authorization Requests (PAR) | Stable | [RFC 9126](https://www.rfc-editor.org/rfc/rfc9126.html) |
-| **RFC 9207** | OAuth 2.0 Authorization Server Issuer Identifier | Stable | [RFC 9207](https://www.rfc-editor.org/rfc/rfc9207.html) |
-| **RFC 9449** | OAuth 2.0 Demonstration of Proof-of-Possession (DPoP) | Stable | [RFC 9449](https://www.rfc-editor.org/rfc/rfc9449.html) |
-| **RFC 9701** | JWT Response for OAuth Token Introspection | Stable | [RFC 9701](https://www.rfc-editor.org/rfc/rfc9701.html) |
-| **FAPI 1.0 Security Profile** | FAPI 1.0 - Part 2: Advanced | Stable | [FAPI 1.0](https://openid.net/specs/openid-financial-api-part-2-1_0-final.html) |
-| **FAPI 2.0 Security Profile** | FAPI 2.0 | Stable | [FAPI 2.0](https://openid.net/specs/fapi-security-profile-2_0-final.html) |
-| **FAPI 2.0 Message Signing** | FAPI 2.0 Message Signing | Stable | [FAPI 2.0 MS](https://openid.net/specs/fapi-message-signing-2_0-final.html) |
-| **JWT Secured Authorization Response Mode (JARM)** | JARM | Stable | [JARM](https://openid.net/specs/oauth-v2-jarm-errata1.html) |
-| **OpenID Connect CIBA** | Client Initiated Backchannel Authentication | Stable | [CIBA](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-final.html) |
-| **OpenID Connect RP Metadata Choices 1.0** | RP Metadata Choices | Stable | [RP Metadata](https://openid.net/specs/openid-connect-rp-metadata-choices-1_0-final.html) |
-| **FAPI-CIBA** | FAPI-CIBA - Implementers Draft 01 | Experimental | [FAPI-CIBA](https://openid.net/specs/openid-financial-api-ciba-ID1.html) |
-| **OAuth 2.0 Attestation-Based Client Authentication** | Attestation-Based Client Authentication - Draft 06 | Experimental | [Attestation Auth](https://www.ietf.org/archive/id/draft-ietf-oauth-attestation-based-client-auth-06.html) |
-| **OAuth Client ID Metadata Document** | CIMD - Draft 01 | Experimental | [CIMD](https://www.ietf.org/archive/id/draft-ietf-oauth-client-id-metadata-document-01.html) |
+<Specifications />
 
-**Supported Access Token Formats:**
-- Opaque
-- [JSON Web Token (JWT) Profile for OAuth 2.0 Access Tokens](https://www.rfc-editor.org/rfc/rfc9068.html)
+<Aside type="caution" title="Experimental Features">
+  Experimental specification updates may introduce breaking changes in minor library releases. Upstream recommends using a tilde (`~`) dependency range or [acknowledging the specification version](/configuration/features/) so your CI can detect changes.
+</Aside>
 
 ## OpenID Certification
 
 <Card title="OpenID Certified™" icon="approve-check">
-  oidc-provider has been [certified by the OpenID Foundation](https://openid.net/certification/). It passes all conformance tests for the supported profiles, giving you confidence that the implementation is correct and spec-compliant.
+  Filip Skokan has certified oidc-provider for the OpenID Connect and FAPI profiles listed in the [upstream certification section](https://github.com/panva/node-oidc-provider#certification). See the [OpenID Foundation certification information](https://openid.net/certification/) for details.
 </Card>
 
 ## Acknowledgments

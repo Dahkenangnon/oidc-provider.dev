@@ -1,7 +1,28 @@
 :root {
+	--oidc-navigation-height: 3.5rem;
+	--oidfed-promo-height: 6.5rem;
+	--sl-nav-height: calc(var(--oidc-navigation-height) + var(--oidfed-promo-height));
 	--sl-color-accent-low: #052e16;
 	--sl-color-accent: #10b981;
 	--sl-color-accent-high: #a7f3d0;
+}
+
+@media (min-width: 50rem) {
+  :root {
+    --oidc-navigation-height: 4rem;
+    --oidfed-promo-height: 2.5rem;
+  }
+}
+
+/* Keep the mobile menu button in the navigation above the promotion. */
+starlight-menu-button button {
+  top: calc((var(--oidc-navigation-height) - var(--sl-menu-button-size)) / 2);
+}
+
+@media print {
+  :root {
+    --sl-nav-height: var(--oidc-navigation-height);
+  }
 }
 :root[data-theme='light'] {
 	--sl-color-accent-low: #d1fae5;

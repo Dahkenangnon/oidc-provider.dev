@@ -11,6 +11,7 @@
 
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { extractSpecs } from "./upstream-specs.ts";
 
 // ---------------------------------------------------------------------------
 // Config
@@ -379,82 +380,6 @@ function rewriteLinks(content: string, linkMap: Map<string, string>): string {
 }
 
 // ---------------------------------------------------------------------------
-// Spec data extractor
-// ---------------------------------------------------------------------------
-
-interface SpecEntry {
-  name: string;
-  rfc?: string;
-  children?: SpecEntry[];
-  experimental?: boolean;
-}
-
-function extractSpecs(readmeContent: string): SpecEntry[] {
-  const specs: SpecEntry[] = [];
-
-  // Find the "## Implemented specs & features" section
-  const specMatch = readmeContent.match(
-    /## Implemented specs & features\s*\n([\s\S]*?)(?=\n## )/,
-  );
-  if (!specMatch) return specs;
-
-  const specBlock = specMatch[1];
-  const lines = specBlock.split("\n");
-
-  let inExperimental = false;
-
-  for (const line of lines) {
-    if (line.includes("experimental features")) {
-      inExperimental = true;
-      continue;
-    }
-
-    if (line.includes("Supported Access Token formats")) {
-      // Skip this sub-section
-      continue;
-    }
-
-    // Top-level bullet: "- text"
-    const topMatch = line.match(/^- (.+)$/);
-    if (topMatch) {
-      const entry = parseSpecLine(topMatch[1], inExperimental);
-      if (entry) specs.push(entry);
-      continue;
-    }
-
-    // Child bullet: "  - text"
-    const childMatch = line.match(/^\s{2,}- (.+)$/);
-    if (childMatch && specs.length > 0) {
-      const parent = specs[specs.length - 1];
-      if (!parent.children) parent.children = [];
-      const entry = parseSpecLine(childMatch[1], inExperimental);
-      if (entry) parent.children.push(entry);
-    }
-  }
-
-  return specs;
-}
-
-function parseSpecLine(
-  text: string,
-  experimental: boolean,
-): SpecEntry | null {
-  // Strip markdown link syntax: [`RFC6749` - OAuth 2.0][oauth2] → `RFC6749` - OAuth 2.0
-  const cleaned = text.replace(/\[([^\]]+)\]\[[^\]]*\]/g, "$1");
-
-  // Extract RFC identifier if present
-  const rfcMatch = cleaned.match(/`(RFC\d+)`/);
-  // Clean display name: remove backticks
-  const name = cleaned.replace(/`/g, "").trim();
-
-  const entry: SpecEntry = { name };
-  if (rfcMatch) entry.rfc = rfcMatch[1];
-  if (experimental) entry.experimental = true;
-
-  return entry;
-}
-
-// ---------------------------------------------------------------------------
 // Page generation
 // ---------------------------------------------------------------------------
 
@@ -533,6 +458,9 @@ async function main() {
     fetchOrCache(SOURCES.changelog.url, SOURCES.changelog.cache),
     fetchOrCache(SOURCES.security.url, SOURCES.security.cache),
   ]);
+
+  // Validate specifications before cleaning or writing generated pages.
+  const specs = extractSpecs(readmeRaw);
 
   // 2. Parse docs/README.md
   console.log("\nParsing docs/README.md...");
@@ -1033,9 +961,8 @@ async function main() {
 
   // --- Spec data ---
   console.log("\nExtracting spec data:");
-  const specs = extractSpecs(readmeRaw);
   writeData(`${DATA_PREFIX}specs.json`, JSON.stringify(specs, null, 2));
-  console.log(`  Extracted ${specs.length} spec entries`);
+  console.log(`  Extracted ${specs.specifications.length} specifications and ${specs.accessTokenFormats.length} access-token formats`);
 
   // --- CHANGELOG (paginated) ---
   if (!IS_V8) {
@@ -1088,12 +1015,6 @@ async function main() {
     const securityBody = securityRaw.replace(/^#\s+.+\n/, "").trim();
     const page = frontmatter("Security Policy") + securityBody + "\n";
     writeOutput("security.md", page);
-  }
-
-  // --- Spec coverage check ---
-  if (!IS_V8) {
-    console.log("\nSpec coverage check:");
-    checkSpecCoverage(specs, readmeRaw);
   }
 
   // --- Version index page (v8 only) ---
@@ -1162,39 +1083,6 @@ function escapeXml(str: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
-}
-
-// ---------------------------------------------------------------------------
-// Spec coverage check
-// ---------------------------------------------------------------------------
-
-function checkSpecCoverage(specs: SpecEntry[], readmeContent: string): void {
-  // Extract RFC identifiers from upstream README
-  const upstreamRfcs = new Set<string>();
-  const rfcPattern = /`(RFC\d+)`/g;
-  let match;
-  while ((match = rfcPattern.exec(readmeContent)) !== null) {
-    upstreamRfcs.add(match[1]);
-  }
-
-  // Extract RFCs from parsed specs
-  const coveredRfcs = new Set<string>();
-  function collectRfcs(entries: SpecEntry[]) {
-    for (const e of entries) {
-      if (e.rfc) coveredRfcs.add(e.rfc);
-      if (e.children) collectRfcs(e.children);
-    }
-  }
-  collectRfcs(specs);
-
-  const missing = [...upstreamRfcs].filter((r) => !coveredRfcs.has(r));
-  if (missing.length > 0) {
-    console.warn(
-      `  [warn] RFCs in upstream README not covered in specs.json: ${missing.join(", ")}`,
-    );
-  } else {
-    console.log("  All upstream RFCs are covered in specs.json");
-  }
 }
 
 function generateConfigPage(

@@ -41,6 +41,7 @@ export default defineConfig({
 				baseUrl: 'https://github.com/Dahkenangnon/oidc-provider.dev/edit/main/',
 			},
 			components: {
+				Header: './src/components/Header.astro',
 				Footer: './src/components/Footer.astro',
 				Head: './src/components/Head.astro',
 			},

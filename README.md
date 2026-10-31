@@ -12,7 +12,9 @@ The site is built with [Astro][] + [Starlight][]. A build script fetches documen
 upstream docs → scripts/build-from-upstream.ts → src/content/docs/**/*.md → dist/
 ```
 
-A GitHub Actions workflow checks for upstream changes every 6 hours, opens a PR with updated cache files, and deploys to GitHub Pages on merge to `main`.
+The homepage specifications table and access-token formats are also generated from the upstream root README. The remaining homepage content is maintained manually. Generation fails if the specification structure or references cannot be parsed.
+
+A GitHub Actions workflow checks for upstream changes every 6 hours and rebuilds and deploys to GitHub Pages when changes are detected. Pushes to `main` also trigger deployment.
 
 ## Development
 
@@ -20,6 +22,7 @@ A GitHub Actions workflow checks for upstream changes every 6 hours, opens a PR 
 npm install
 npm run dev                # generate pages from cache + start dev server
 npm run generate:refresh   # force-refresh upstream docs
+npm test                   # upstream specification parser tests
 npm run build              # production build
 ```
 

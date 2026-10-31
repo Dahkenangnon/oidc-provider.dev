@@ -1,0 +1,49 @@
+---
+import specs from '../data/specs.json';
+import type { SpecificationData } from '../../scripts/upstream-specs';
+
+const { specifications, accessTokenFormats }: SpecificationData = specs;
+---
+
+<div class="specifications-table" role="region" aria-label="Implemented specifications" tabindex="0">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Specification</th>
+        <th scope="col">Status</th>
+        <th scope="col">Reference</th>
+      </tr>
+    </thead>
+    <tbody>
+      {specifications.map((spec) => (
+        <tr>
+          <th scope="row">{spec.name}</th>
+          <td>{spec.experimental ? 'Experimental' : 'Stable'}</td>
+          <td><a href={spec.url} aria-label={`Read specification: ${spec.name}`}>Read</a></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<p><strong>Supported Access Token Formats:</strong></p>
+<ul>
+  {accessTokenFormats.map((format) => (
+    <li>{format.url ? <a href={format.url}>{format.name}</a> : format.name}</li>
+  ))}
+</ul>
+
+<style>
+  .specifications-table {
+    overflow-x: auto;
+  }
+
+  table {
+    display: table;
+    width: 100%;
+  }
+
+  tbody th {
+    font-weight: 400;
+  }
+</style>
