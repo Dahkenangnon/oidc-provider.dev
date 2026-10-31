@@ -7,7 +7,7 @@ import { Icon } from '@astrojs/starlight/components';
   aria-labelledby="oidfed-title"
   data-pagefind-ignore
 >
-  <div>
+  <div class="feature-copy">
     <h2 id="oidfed-title">Trust infrastructure for OpenID4VCI, OpenID4VP, and OpenID Connect</h2>
     <p>
       Establish trust between credential issuers, wallet providers, and verifiers,
@@ -17,9 +17,14 @@ import { Icon } from '@astrojs/starlight/components';
     </p>
     <p class="attribution">Another open-source project by this site’s maintainer.</p>
   </div>
-  <a href="https://github.com/Dahkenangnon/oidfed?utm_source=oidc-provider.dev">
-    Explore oidfed on GitHub <Icon name="external" size="1rem" />
-  </a>
+  <div class="feature-links">
+    <a href="https://github.com/Dahkenangnon/oidfed?utm_source=oidc-provider.dev">
+      Explore oidfed on GitHub <Icon name="external" size="1rem" />
+    </a>
+    <a class="website-link" href="https://oidfed.com/?utm_source=oidc-provider.dev">
+      Visit website <Icon name="external" size="1rem" />
+    </a>
+  </div>
 </section>
 
 <style>
@@ -37,8 +42,15 @@ import { Icon } from '@astrojs/starlight/components';
     color: var(--sl-color-accent-high);
   }
 
-  .oidfed-feature > div {
+  .feature-copy {
     flex: 1 1 30rem;
+  }
+
+  .feature-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   h2 {
@@ -74,6 +86,13 @@ import { Icon } from '@astrojs/starlight/components';
   }
 
   a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .website-link {
+    background-color: transparent;
+    color: inherit;
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }

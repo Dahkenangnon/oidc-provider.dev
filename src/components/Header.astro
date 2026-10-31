@@ -12,9 +12,14 @@ import { Icon } from '@astrojs/starlight/components';
     <span>From this site’s maintainer:</span>
     <strong>oidfed</strong> — Trust infrastructure for OpenID4VCI, OpenID4VP, and OpenID Connect.
   </p>
-  <a href="https://github.com/Dahkenangnon/oidfed?utm_source=oidc-provider.dev">
-    Explore on GitHub <Icon name="external" size="0.875rem" />
-  </a>
+  <div class="promotion-links">
+    <a href="https://github.com/Dahkenangnon/oidfed?utm_source=oidc-provider.dev">
+      Explore on GitHub <Icon name="external" size="0.875rem" />
+    </a>
+    <a href="https://oidfed.com/?utm_source=oidc-provider.dev">
+      Visit website <Icon name="external" size="0.875rem" />
+    </a>
+  </div>
 </oidfed-promotion>
 
 <script>
@@ -75,6 +80,13 @@ import { Icon } from '@astrojs/starlight/components';
 
   strong {
     margin-inline-start: 0.25em;
+  }
+
+  .promotion-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
   }
 
   a {
